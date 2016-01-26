@@ -27,17 +27,13 @@ class Newsletter extends BaseAction implements EventSubscriberInterface
 {
     public function subscribe(NewsletterEvent $event)
     {
-        // test if the email is already registered and unsubscribed
-        if (null === $newsletter = NewsletterQuery::create()->findOneByEmail($event->getEmail())) {
-            $newsletter = new NewsletterModel();
-        }
+        $newsletter = new NewsletterModel();
 
         $newsletter
             ->setEmail($event->getEmail())
             ->setFirstname($event->getFirstname())
             ->setLastname($event->getLastname())
             ->setLocale($event->getLocale())
-            ->setUnsubscribed(false)
             ->save();
 
         $event->setNewsletter($newsletter);
@@ -46,9 +42,7 @@ class Newsletter extends BaseAction implements EventSubscriberInterface
     public function unsubscribe(NewsletterEvent $event)
     {
         if (null !== $nl = NewsletterQuery::create()->findPk($event->getId())) {
-            $nl
-                ->setUnsubscribed(true)
-                ->save();
+            $nl->delete();
 
             $event->setNewsletter($nl);
         }
@@ -68,24 +62,7 @@ class Newsletter extends BaseAction implements EventSubscriberInterface
     }
 
     /**
-     * Returns an array of event names this subscriber wants to listen to.
-     *
-     * The array keys are event names and the value can be:
-     *
-     *  * The method name to call (priority defaults to 0)
-     *  * An array composed of the method name to call and the priority
-     *  * An array of arrays composed of the method names to call and respective
-     *    priorities, or 0 if unset
-     *
-     * For instance:
-     *
-     *  * array('eventName' => 'methodName')
-     *  * array('eventName' => array('methodName', $priority))
-     *  * array('eventName' => array(array('methodName1', $priority), array('methodName2'))
-     *
-     * @return array The event names to listen to
-     *
-     * @api
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {

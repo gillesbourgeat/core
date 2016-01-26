@@ -150,8 +150,7 @@ class Customer extends BaseLoop implements SearchLoopInterface, PropelSearchLoop
         );
 
         $search
-            ->addJoinObject($join, 'newsletter_join')
-            ->addJoinCondition('newsletter_join', NewsletterTableMap::UNSUBSCRIBED, false, null, \PDO::PARAM_BOOL)
+            ->addJoinObject($join)
             ->withColumn("IF(ISNULL(".NewsletterTableMap::EMAIL."), 0, 1)", "is_registered_to_newsletter");
 
         // If "*" === $newsletter, no filter will be applied, so it won't change anything

@@ -109,13 +109,6 @@ interface FacadeInterface
     public function getNbArticlesInCart();
 
     /**
-     * Return the number of Products include quantity in the Cart
-     *
-     * @return int
-     */
-    public function getNbArticlesInCartIncludeQuantity();
-
-    /**
      * Return all Coupon given during the Checkout
      *
      * @return array Array of CouponInterface

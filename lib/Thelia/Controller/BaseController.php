@@ -12,7 +12,7 @@
 
 namespace Thelia\Controller;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use Symfony\Component\Form\Form;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -34,7 +34,6 @@ use Thelia\Form\Exception\FormValidationException;
 use Thelia\Log\Tlog;
 use Thelia\Mailer\MailerFactory;
 use Thelia\Model\OrderQuery;
-use Thelia\Tools\Redirect;
 use Thelia\Tools\URL;
 
 /**
@@ -47,8 +46,10 @@ use Thelia\Tools\URL;
  * @author Benjamin Perche <bperche@openstudio.fr>
  */
 
-abstract class BaseController extends ContainerAware
+abstract class BaseController
 {
+    use ContainerAwareTrait;
+
     const EMPTY_FORM_NAME = "thelia.empty";
 
     protected $tokenProvider;
@@ -60,7 +61,7 @@ abstract class BaseController extends ContainerAware
     protected $templateHelper;
 
     /** @var bool Fallback on default template when setting the templateDefinition */
-    protected $useFallbackTemplate = true;
+    protected $useFallbackTemplate = false;
 
     /**
      * Return an empty response (after an ajax request, for example)
@@ -85,7 +86,8 @@ abstract class BaseController extends ContainerAware
     /**
      * @param $pdf
      * @param $fileName
-     * @param $status
+     * @param int $status
+     * @param bool $browser
      * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function pdfResponse($pdf, $fileName, $status = 200, $browser = false)
@@ -335,7 +337,7 @@ abstract class BaseController extends ContainerAware
      * @param $routeId
      * @param array $urlParameters
      * @param array $routeParameters
-     * @param bool $referenceType
+     * @param int $referenceType
      * @return string
      */
     protected function retrieveUrlFromRouteId(
@@ -402,9 +404,9 @@ abstract class BaseController extends ContainerAware
      * create an instance of RedriectResponse for a given route id.
      *
      * @param $routeId
-     * @param  array                                      $urlParameters
-     * @param  array                                      $routeParameters
-     * @param  bool                                       $referenceType
+     * @param  array $urlParameters
+     * @param  array $routeParameters
+     * @param  int $referenceType
      * @return \Symfony\Component\HttpFoundation\Response
      */
     protected function generateRedirectFromRoute(
@@ -423,7 +425,7 @@ abstract class BaseController extends ContainerAware
      *
      * @param string         $routeId       a route ID, as defines in Config/Resources/routing/admin.xml
      * @param mixed          $parameters    An array of parameters
-     * @param Boolean|string $referenceType The type of reference to be generated (one of the constants)
+     * @param int $referenceType The type of reference to be generated (one of the constants)
      *
      * @throws RouteNotFoundException              If the named route doesn't exist
      * @throws MissingMandatoryParametersException When some parameters are missing that are mandatory for the route
@@ -450,7 +452,7 @@ abstract class BaseController extends ContainerAware
      * @param string         $routerName    Router name
      * @param string         $routeId       The name of the route
      * @param mixed          $parameters    An array of parameters
-     * @param Boolean|string $referenceType The type of reference to be generated (one of the constants)
+     * @param int $referenceType The type of reference to be generated (one of the constants)
      *
      * @throws RouteNotFoundException              If the named route doesn't exist
      * @throws MissingMandatoryParametersException When some parameters are missing that are mandatory for the route

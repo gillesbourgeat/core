@@ -12,6 +12,7 @@
 
 namespace Thelia\Action;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Thelia\Core\Event\Administrator\AdministratorEvent;
 use Thelia\Core\Event\Administrator\AdministratorUpdatePasswordEvent;
@@ -23,13 +24,15 @@ class Administrator extends BaseAction implements EventSubscriberInterface
 {
     /**
      * @param AdministratorEvent $event
+     * @param $eventName
+     * @param EventDispatcherInterface $dispatcher
      */
-    public function create(AdministratorEvent $event)
+    public function create(AdministratorEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     {
         $administrator = new AdminModel();
 
         $administrator
-            ->setDispatcher($event->getDispatcher())
+            ->setDispatcher($dispatcher)
             ->setFirstname($event->getFirstname())
             ->setLastname($event->getLastname())
             ->setLogin($event->getLogin())
@@ -45,12 +48,14 @@ class Administrator extends BaseAction implements EventSubscriberInterface
 
     /**
      * @param AdministratorEvent $event
+     * @param $eventName
+     * @param EventDispatcherInterface $dispatcher
      */
-    public function update(AdministratorEvent $event)
+    public function update(AdministratorEvent $event, $eventName, EventDispatcherInterface $dispatcher)
     {
         if (null !== $administrator = AdminQuery::create()->findPk($event->getId())) {
             $administrator
-                ->setDispatcher($event->getDispatcher())
+                ->setDispatcher($dispatcher)
                 ->setFirstname($event->getFirstname())
                 ->setLastname($event->getLastname())
                 ->setLogin($event->getLogin())
@@ -90,7 +95,7 @@ class Administrator extends BaseAction implements EventSubscriberInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public static function getSubscribedEvents()
     {
