@@ -127,8 +127,14 @@ class Product extends BaseAction implements EventSubscriberInterface
             $lang = $event->getLang();
             $originalProduct = $event->getOriginalProduct();
 
-            $originalProductDefaultI18n = ProductI18nQuery::create()
-                ->findPk([$originalProduct->getId(), $lang]);
+            if (null === $originalProductDefaultI18n = ProductI18nQuery::create()
+                ->findPk([$originalProduct->getId(), $lang])) {
+                // No i18n entry for the current language. Try to find one for creating the product.
+                // It will be updated later by updateClone()
+                $originalProductDefaultI18n = ProductI18nQuery::create()
+                    ->findOneById($originalProduct->getId())
+                    ;
+            }
 
             $originalProductDefaultPrice = ProductPriceQuery::create()
                 ->findOneByProductSaleElementsId($originalProduct->getDefaultSaleElements()->getId());
@@ -370,6 +376,8 @@ class Product extends BaseAction implements EventSubscriberInterface
             $con->beginTransaction();
 
             try {
+                $fileList = ['images' => [], 'documentList' => []];
+
                 // Get product's files to delete after product deletion
                 $fileList['images']['list'] = ProductImageQuery::create()
                     ->findByProductId($event->getProductId());

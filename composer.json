@@ -1,5 +1,5 @@
 {
-    "name": "gillesbourgeat/thelia-core",
+    "name": "thelia/core",
     "description": "Core of Thelia ecommerce CMS.",
     "license": "LGPL-3.0+",
     "homepage": "http://thelia.net/",
@@ -7,11 +7,16 @@
         "forum": "http://thelia.net/forum",
         "wiki": "http://doc.thelia.net"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/thelia/Propel2"
+        }
+    ],
     "require": {
         "php": ">=5.4",
         "ircmaxell/password-compat": "1.0.*",
-        "thelia/propel": "dev-thelia-2.3",
-	"psr/log": "1.0",
+        "psr/log": "1.0",
         "symfony/config": "2.8.*",
         "symfony/console": "2.8.*",
         "symfony/dependency-injection": "2.8.*",
@@ -49,7 +54,9 @@
         "oyejorge/less.php": "1.7.*",
         "michelf/php-markdown": "1.6.*",
         "smarty/smarty": "3.1.20",
-        "ramsey/array_column": "~1.1"
+        "ramsey/array_column": "~1.1",
+        "propel/propel": "dev-thelia-2.3",
+        "commerceguys/addressing": "0.8.*"
     },
     "require-dev": {
         "fzaninotto/faker": "1.5.*",
@@ -68,28 +75,5 @@
         "files": [
             "bootstrap.php"
         ]
-    },
-    "repositories": [
-        {
-            "type": "package",
-            "package": {
-                "name": "smarty/smarty",
-                "version": "3.1.20",
-                "dist": {
-                    "url": "http://www.smarty.net/files/Smarty-3.1.19.zip",
-                    "type": "zip"
-                },
-                "source": {
-                    "url": "http://smarty-php.googlecode.com/svn/",
-                    "type": "svn",
-                    "reference": "tags/Smarty_3_1_20/distribution/"
-                },
-                "autoload": {
-                    "classmap": [
-                        "libs/"
-                    ]
-                }
-            }
-        }
-    ]
+    }
 }
